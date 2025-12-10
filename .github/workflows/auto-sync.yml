@@ -8,13 +8,10 @@ on:
     branches:
       - "**"
 
-env:
-  TARGET_REPO: ${{ vars.SYNC_TARGET_REPO }} # 例如 owner/mirror-repo
-
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: ${{ env.TARGET_REPO != '' }}
+    if: ${{ vars.SYNC_TARGET_REPO != '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,7 +22,7 @@ jobs:
         with:
           source_repo: ${{ github.repository }}
           source_branch: ${{ github.ref_name }}
-          destination_repo: ${{ env.TARGET_REPO }}
+          destination_repo: ${{ vars.SYNC_TARGET_REPO }} # 例如 owner/mirror-repo
           destination_branch: ${{ github.ref_name }}
           sync_tags: "false"
           github_token: ${{ secrets.GH_SYNC_TOKEN }}
