@@ -14,7 +14,7 @@ env:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: env.TARGET_REPO != ''
+    if: ${{ env.TARGET_REPO != '' }}
     steps:
       - uses: actions/checkout@v4
         with:
