@@ -1,0 +1,27 @@
+name: 定时同步原仓库
+permissions:
+  contents: write
+  actions: read
+env:
+  PRIMARY_REPO: ${{ vars.PRIMARY_REPO }}
+on:
+  schedule:
+    - cron: "*/2 * * * *" # 每 2 分钟运行一次
+
+jobs:
+  sync:
+    if: ${{ !env.PRIMARY_REPO || github.repository == env.PRIMARY_REPO }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: 执行仓库同步
+        uses: repo-sync/github-sync@v2
+        with:
+          source_repo: "https://github.com/78ya/nextjs-file.git"
+          source_branch: "main"
+          destination_branch: "main"  # 你的私有仓库分支
+          sync_tags: "true"
+          github_token: ${{ secrets.GH_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+          # force: "true"
